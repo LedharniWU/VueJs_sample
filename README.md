@@ -4,7 +4,8 @@ Learn Vue.js SFC sample
 ## 使用方法
 ### Node.jsのインストール
 [Node.js](https://nodejs.org/ja/)
-上記のLINKでNode.jsをダウンロードし、インストールする。
+
+LINKからNode.jsをダウンロードし、インストールする。
 
 ### プロジェクトファイルにNode.jsインストール
 ```
