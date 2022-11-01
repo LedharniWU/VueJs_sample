@@ -1,0 +1,20 @@
+ディレクトリ構成
+flaskXVuejs
+  ├─backend (Flaskのバックエンド)
+  └─frontend (Vue.jsのバックエンド)
+
+目標設定：
+① python flask and Vue,js 環境構築
+② バックエンド側
+   - Excel読み込み
+   - 変数保存
+      - pandas 同じ時間のデータ取得
+
+使用技術
+- python flask
+- python pandas
+- vue.js SFC
+
+参考資料
+FlaskとVue.jsでSPA Webアプリ開発
+https://qiita.com/y-tsutsu/items/67f71fc8430a199a3efd#%E3%81%AF%E3%81%98%E3%82%81%E3%81%AB
