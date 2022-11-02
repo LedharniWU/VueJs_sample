@@ -20,6 +20,11 @@
             <div v-show="files.length">
                 <button class="button" @click="sendFile">送信</button>
             </div>
+            <ul>
+                <li v-for="(item, index) in info" :key="index">
+                    {{ item }}
+                </li>
+            </ul>
         </div>
     </div>
 </template>
@@ -31,8 +36,14 @@ export default {
     data() {
         return {
             isEnter: false,
-            files: []
+            info: null,
+            files: [],
+            files_name: {name: ''},
         }
+    },
+    mounted () {
+        axios.get('/files')
+        .then(response => { this.info = response.data.files })
     },
     methods: {
         dragEnter() {
@@ -54,14 +65,19 @@ export default {
         },
         sendFile() {
             this.files.forEach(file => {
-                let form = new FormData()
-                form.append('file', file)
-                axios.post('/post_info', form).then(response => {
+                this.files_name = {...this.files_name, name: file.name}
+                axios.post('/file', this.files_name)
+                .then(response => {
                     console.log(response.data)
                 }).catch(error => {
                     console.log(error)
                 })
+                this.getFiles()
             })
+        },
+        getFiles: function() {
+            axios.get('/files')
+            .then(response => { this.info = response.data.files })
         }
     }
 }
