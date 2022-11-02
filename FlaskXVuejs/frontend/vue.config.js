@@ -3,3 +3,4 @@ module.exports = defineConfig({
   assetsDir: 'static',
   transpileDependencies: true
 })
+

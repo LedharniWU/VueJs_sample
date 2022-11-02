@@ -1,25 +1,28 @@
 <template>
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <DragDropVue/>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import DragDropVue from './components/DragDrop.vue';
+
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    DragDropVue
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+html,
+  body {
+      height: 100%;
+  }
+
+  body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
 }
 </style>
