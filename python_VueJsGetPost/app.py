@@ -9,6 +9,10 @@ products = [
     {'id': 3, 'name':'商品3', 'price':1980},
 ]
 
+files = [
+    {'id':0, 'name':'name'}
+]
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -24,6 +28,19 @@ def create_product():
     new_product.update(list(post_data.items())) # 上記で作成した辞書にpostで受けたデータを追加(update)
     products.append(new_product)
     return jsonify({'products': products})
+
+@app.route('/file', methods=['POST'])
+def create_file():
+    post_data = request.get_json()
+
+    new_file = {'id': files[-1]['id']+1}
+    new_file.update(list(post_data.items()))
+    files.append(new_file)
+    return jsonify({'files': files})
+
+@app.route('/files')
+def get_files():
+    return jsonify({'files': files})
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port='8888')

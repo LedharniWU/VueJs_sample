@@ -5,35 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">   
     <link rel="stylesheet" href="/static/style.css">
-    <style>
-        h2 {
-          margin-bottom: 0;
-        }
-    </style>
     <title>Document</title>
 </head>
 <body>
-    <div id="app" class="container">
-        <ul>
-            <li v-for="column in info">
-              ( ID : [[ column.id ]] ) ( Name : [[ column.name ]] ) ( Price : [[ column.price ]] )
-            </li>
-        </ul>
-        <h2>POST</h2>
-        <form @submit.prevent="createProduct">
-            <label>商品名
-                <input type="text" v-model="newProduct.name">
-            </label><br>
-            <label>価格
-                <input type="number" v-model.number="newProduct.price"> <!-- 数値データになるようにnumber修飾性をつける -->
-            </label><br>
-            <input type="submit" value="POST /product">
-        </form>
-        <br>
-        [[ newProduct.name ]]<br> <!-- バインド情報の表示 -->
-        [[ newProduct.price ]]
-    </div>
-
     <div id="dragDrop">
         <div class="drop_area" @dragenter="dragEnter"
                                @dragleave="dragLeave"
@@ -57,7 +31,7 @@
             </div>
             <ul>
                 <li v-for="column in info">
-                  ( ID : [[ column.id ]] ) ( Name : [[ column.name ]] )
+                  ID : [[ column.id ]]  / Name : [[ column.name ]]
                 </li>
             </ul>
         </div>
@@ -66,38 +40,6 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
-        const app = new Vue({
-            el: '#app',
-            delimiters: ['[[', ']]'],
-            data: {
-                info: null,
-                newProduct: {name: '', price: null},
-            },
-            methods: {
-                getProducts: function() {
-                    axios.get('/products')
-                    .then(response => {
-                        this.info = response.data.products
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    })
-                },
-                createProduct: function() {
-                    axios.post('/product', this.newProduct)
-                    .then(response => {})
-                    .catch(error => {
-                        console.log(error);
-                    })
-                    this.getProducts()
-                }
-            },
-            mounted () {
-                axios.get('/products')
-                .then(response => { this.info = response.data.products })
-            }
-        });
-
         const dragDrop = new Vue({
             el: "#dragDrop",
             delimiters: ['[[', ']]'],
@@ -106,6 +48,10 @@
                 info: null,
                 files: [],
                 files_name: {name: ''},
+            },
+            mounted () {
+                axios.get('/files')
+                .then(response => { this.info = response.data.files })
             },
             methods: {
                 dragEnter() {
@@ -140,10 +86,6 @@
                     axios.get('/files')
                     .then(response => { this.info = response.data.files })
                 }
-            },
-            mounted () {
-                axios.get('/files')
-                .then(response => { this.info = response.data.files })
             }
         })
     </script>
