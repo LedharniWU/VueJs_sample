@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/vue-good-table@2.16.3/dist/vue-good-table.css" rel='stylesheet'> 
+    <script src="https://cdn.jsdelivr.net/npm/vue-good-table@2.16.3/dist/vue-good-table.js"></script>
+    <script src="https://www.promisejs.org/polyfills/promise-7.0.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.11/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <vue-good-table
+        :columns="columns" 
+        :rows="rows"
+        theme="black-rhino"
+        style-class="vgt-table striped"
+        :fixed-header="false"
+        :search-options="searchOptions"
+        max-height="500px"
+        :pagination-options="{
+            enabled: true,
+            mode: 'records',
+            perPage: 5,
+            position: 'bottom',
+            perPageDropdown: [5, 10, 100],
+            dropdownAllowAll: false,
+            setCurrentPage: 1,
+            nextLabel: '次へ',
+            prevLabel: '前へ',
+            rowsPerPageLabel: '行数',
+            ofLabel: '中',
+            pageLabel: 'ページ', // for 'pages' mode
+            allLabel: 'All',
+        }"
+        
+        >
+        </vue-good-table>
+    </div>
+</body>
+
+<script>
+    Vue.use(window.vueGoodTable.default);
+    new Vue({
+        el: '#app',
+        data: {
+            rowSelection: [],
+            users: [],
+            columns: [
+                {
+                    label: 'Name',
+                    field: 'name',
+                },
+                {
+                    label: 'Username',
+                    field: 'username',
+                },
+                {
+                    label: 'Email',
+                    field: 'email',
+                },
+                {
+                    label: 'Phone',
+                    field: 'phone',
+                },
+                {
+                    label: 'Website',
+                    field: 'website',
+                },
+            ],
+            rows:[],
+            searchOptions: {
+                enabled: true,
+                placeholder: 'テーブルを検索します',
+            },
+            text: ''
+        },
+        mounted :function(){
+            axios.get('https://jsonplaceholder.typicode.com/users')
+                .then(response => this.rows = response.data)
+                .catch(error => console.log(error))
+        },
+        methods: {
+            deleteRow(id) {
+                this.showAlert(id, 'DELETE')
+                this.rows[id - 1].flog = 'false'
+            },
+            addRow(id) {
+                this.showAlert(id, 'ADD')
+                this.rows[id - 1].flog = 'true'
+            },
+            showRow(params){
+            console.log(params)
+            },
+            showAlert(id, type) {
+                this.text = `You clicked ${type} on row ID ${id}`
+            },
+            selectionChanged(params) {
+            console.log(params.selectedRows[0].id)
+            console.log(params.selectedRows[0].name)
+            console.log(params.selectedRows[0].email)
+            console.log(params.selectedRows[0].age)
+            console.log(params.selectedRows[0].createdAt)
+            console.log(params.selectedRows[0].score)
+            }   
+        }
+    })
+</script> 
+</html>
