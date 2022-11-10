@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/vue-good-table@2.16.3/dist/vue-good-table.css" rel='stylesheet'> 
+    <script src="https://cdn.jsdelivr.net/npm/vue-good-table@2.16.3/dist/vue-good-table.js"></script>
+    <script src="https://www.promisejs.org/polyfills/promise-7.0.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.11/dist/vue.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+  <div id="app">
+      <vue-good-table 
+          :columns="columns" 
+          :rows="rows"
+          theme="black-rhino"
+          style-class="vgt-table striped"
+          :fixed-header="false"
+          :search-options="searchOptions"    
+          max-height="500px"
+          :pagination-options="{
+              enabled: true,
+              mode: 'records',
+              perPage: 2,
+              position: 'bottom',
+              perPageDropdown: [2, 10, 100],
+              dropdownAllowAll: false,
+              setCurrentPage: 1,
+              nextLabel: '次へ',
+              prevLabel: '前へ',
+              rowsPerPageLabel: '行数',
+              ofLabel: '中',
+              pageLabel: 'ページ', // for 'pages' mode
+              allLabel: 'All',
+          }">
+          <template slot="table-row" slot-scope="props">
+            <span v-if="props.column.field == 'before'">
+              <button @click="deleteRow(props.row.id)">Delete</button>
+            </span>
+            <span v-else>
+              {{props.formattedRow[props.column.field]}}
+            </span>
+          </template>
+          </vue-good-table>
+          <span>{{ text }}</span>
+  </div>
+
+  <div style="height: 50px;" ></div>
+  <hr>
+  <div id="groupTable">
+    <vue-good-table
+      :columns="columns"
+      :rows="rows" >
+      
+      <template slot="table-row" slot-scope="props">
+        <span v-if="props.column.field == 'before'">
+          <button @click="editRow(props.row.id)">Edit</button>
+          <button @click="deleteRow(props.row.id)">Delete</button>
+        </span>
+        <span v-else>
+          {{props.formattedRow[props.column.field]}}
+        </span>
+      </template>
+      
+    </vue-good-table>
+      
+    <span>{{ text }}</span>
+  
+  </div>
+</body>
+
+<style>
+
+</style>
+
+<script>
+Vue.use(window.vueGoodTable.default);
+
+var app = new Vue({
+  el: '#app',
+  data:{
+    vtuber: [],
+    columns: [
+    //   {
+    //     label: 'id',
+    //     field: 'id',
+    //     type: 'number',
+    //   },
+      {
+        label: '名前',
+        field: 'name',
+        width: '50px',
+      },
+      {
+        label: 'メール',
+        field: 'email',
+        width: '50px',
+      },
+      {
+        label: '年齢',
+        field: 'age',
+        type: 'number',
+      },
+      {
+        label: '作成日',
+        field: 'createdAt',
+        type: 'date',
+        dateInputFormat: 'YYYY-MM-DD',
+        dateOutputFormat: 'MMM Do YY',
+      },
+      {
+        label: '％',
+        field: 'score',
+        type: 'percentage',
+      },
+      {
+          label: 'Before',
+          field: 'before'
+      },
+    ],
+    rows: [
+      { id:1, name:"John", email: "John@example.com", age: 20, createdAt: '201-10-31:9: 35 am',score: 0.03343 },
+      { id:2, name:"Jane", email: "Jane@example.com", age: 24, createdAt: '2011-10-31', score: 0.03343 },
+      { id:3, name:"Susan", email: "Susan@example.com", age: 16, createdAt: '2011-10-30', score: 0.03343 },
+      { id:4, name:"Chris", email: "Chris@example.com", age: 55, createdAt: '2011-10-11', score: 0.03343 },
+      { id:5, name:"Dan", email: "Dan@example.com", age: 40, createdAt: '2011-10-21', score: 0.03343 },
+      { id:6, name:"John", email: "John2@example.com", age: 20, createdAt: '2011-10-31', score: 0.03343 },
+    ],
+    searchOptions: {
+        enabled: true,
+        placeholder: 'テーブルを検索します',
+    },
+    text: ''
+  },
+  methods: {
+    editRow(id) {
+        this.showAlert(id, 'EDIT')
+    },
+    deleteRow(id) {
+        this.showAlert(id, 'DELETE')
+    },
+    showAlert(id, type) {
+        this.text = `You clicked ${type} on row ID ${id}`
+    }
+  }
+});
+new Vue({
+  el: '#groupTable',
+  data() {
+    return {
+      columns: [
+        {
+          label: 'ID',
+          field: 'id',
+          sortable: true,
+        },
+        {
+          label: 'Text',
+          field: 'text',
+          type: 'number',
+          sortable: true,
+        },
+        {
+          label: 'Before',
+          field: 'before'
+        },
+      ],
+      rows: [
+        { text: 'A', id: 1 },
+        { text: 'B', id: 2 },
+        { text: 'C', id: 3 },
+        { text: 'D', id: 5 },
+      ],
+      text: ''
+    };
+  },
+  methods: {
+    editRow(id) {
+        this.showAlert(id, 'EDIT')
+    },
+    deleteRow(id) {
+        this.showAlert(id, 'DELETE')
+    },
+    showAlert(id, type) {
+        this.text = `You clicked ${type} on row ID ${id}`
+    }
+  }
+});
+</script>
+</html>
