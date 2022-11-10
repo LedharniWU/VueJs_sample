@@ -1,5 +1,5 @@
 # VueJs_sample
-Learn Vue.js SFC sample
+Learn Vue.js sample
 
 ## 使用方法
 ### Node.jsのインストール
