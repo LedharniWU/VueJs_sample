@@ -1,5 +1,5 @@
 # VueJs_sample
-Learn Vue.js sample
+Learn Vue.js
 
 ## 使用方法
 ### Node.jsのインストール
