@@ -71,6 +71,14 @@
                     label: 'Website',
                     field: 'website',
                 },
+                {
+                    label: 'Address',
+                    field: 'address.street',
+                },
+                {
+                    label: 'Company',
+                    field: 'company.name',
+                },
             ],
             rows:[],
             searchOptions: {
@@ -84,30 +92,7 @@
                 .then(response => this.rows = response.data)
                 .catch(error => console.log(error))
         },
-        methods: {
-            deleteRow(id) {
-                this.showAlert(id, 'DELETE')
-                this.rows[id - 1].flog = 'false'
-            },
-            addRow(id) {
-                this.showAlert(id, 'ADD')
-                this.rows[id - 1].flog = 'true'
-            },
-            showRow(params){
-            console.log(params)
-            },
-            showAlert(id, type) {
-                this.text = `You clicked ${type} on row ID ${id}`
-            },
-            selectionChanged(params) {
-            console.log(params.selectedRows[0].id)
-            console.log(params.selectedRows[0].name)
-            console.log(params.selectedRows[0].email)
-            console.log(params.selectedRows[0].age)
-            console.log(params.selectedRows[0].createdAt)
-            console.log(params.selectedRows[0].score)
-            }   
-        }
+        methods: {}
     })
 </script> 
 </html>
