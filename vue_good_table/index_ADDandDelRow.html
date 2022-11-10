@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/vue-good-table@2.16.3/dist/vue-good-table.css" rel='stylesheet'> 
+    <script src="https://cdn.jsdelivr.net/npm/vue-good-table@2.16.3/dist/vue-good-table.js"></script>
+    <script src="https://www.promisejs.org/polyfills/promise-7.0.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.11/dist/vue.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+  <div id="app">
+      <vue-good-table 
+          :columns="columns" 
+          :rows="rows"
+          theme="black-rhino"
+          style-class="vgt-table striped"
+          :fixed-header="false"
+          :search-options="searchOptions"    
+          max-height="500px"
+          :pagination-options="{
+              enabled: true,
+              mode: 'records',
+              perPage: 2,
+              position: 'bottom',
+              perPageDropdown: [2, 10, 100],
+              dropdownAllowAll: false,
+              setCurrentPage: 1,
+              nextLabel: '次へ',
+              prevLabel: '前へ',
+              rowsPerPageLabel: '行数',
+              ofLabel: '中',
+              pageLabel: 'ページ', // for 'pages' mode
+              allLabel: 'All',
+          }"
+          :select-options="{
+            enabled: true,
+            selectOnCheckboxOnly: true, // only select when checkbox is clicked instead of the row
+            selectionInfoClass: 'custom-class',
+            selectionText: 'rows selected',
+            clearSelectionText: 'clear',
+            disableSelectInfo: true, // disable the select info panel on top
+            selectAllByGroup: true, // when used in combination with a grouped table, add a checkbox in the header row to check/uncheck the entire group
+          }"
+          @on-selected-rows-change="selectionChanged"
+          >
+          <div slot="selected-row-actions">
+            <button>Action 1</button>
+          </div>
+          <template slot="table-row" slot-scope="props">
+            <span v-if="props.column.field == 'before'">
+              <button v-if="props.row.flog == 'true'" @click="deleteRow(props.row.id)">DELETE</button>
+              <button v-if="props.row.flog == 'false'" @click="addRow(props.row.id)">ADD</button>
+            </span>
+          </template>
+          </vue-good-table>
+          <span>{{ text }}</span>
+  </div>
+</body>
+
+<style>
+
+</style>
+
+<script>
+Vue.use(window.vueGoodTable.default);
+
+var app = new Vue({
+  el: '#app',
+  data:{
+    rowSelection: [],
+    columns: [
+    //   {
+    //     label: 'id',
+    //     field: 'id',
+    //     type: 'number',
+    //   },
+      {
+        label: '名前',
+        field: 'name',
+        width: '50px',
+      },
+      {
+        label: 'メール',
+        field: 'email',
+        width: '50px',
+      },
+      {
+        label: '年齢',
+        field: 'age',
+        type: 'number',
+      },
+      {
+        label: '作成日',
+        field: 'createdAt',
+        type: 'date',
+        dateInputFormat: 'YYYY-MM-DD',
+        dateOutputFormat: 'MMM Do YY',
+      },
+      {
+        label: '％',
+        field: 'score',
+        type: 'percentage',
+      },
+      {
+          label: 'Before',
+          field: 'before'
+      },
+    ],
+    rows: [
+      { id:1, name:"John", email: "John@example.com", age: 20, createdAt: '201-10-31:9: 35 am',score: 0.03343, flog: 'true' },
+      { id:2, name:"Jane", email: "Jane@example.com", age: 24, createdAt: '2011-10-31', score: 0.03343, flog: 'true' },
+      { id:3, name:"Susan", email: "Susan@example.com", age: 16, createdAt: '2011-10-30', score: 0.03343, flog: 'false' },
+      { id:4, name:"Chris", email: "Chris@example.com", age: 55, createdAt: '2011-10-11', score: 0.03343, flog: 'false' },
+      { id:5, name:"Dan", email: "Dan@example.com", age: 40, createdAt: '2011-10-21', score: 0.03343, flog: 'true' },
+      { id:6, name:"John", email: "John2@example.com", age: 20, createdAt: '2011-10-31', score: 0.03343, flog: 'true'},
+    ],
+    searchOptions: {
+        enabled: true,
+        placeholder: 'テーブルを検索します',
+    },
+    text: ''
+  },
+  methods: {
+    deleteRow(id) {
+        this.showAlert(id, 'DELETE')
+        this.rows[id - 1].flog = 'false'
+    },
+    addRow(id) {
+        this.showAlert(id, 'ADD')
+        this.rows[id - 1].flog = 'true'
+    },
+    showRow(params){
+      console.log(params)
+    },
+    showAlert(id, type) {
+        this.text = `You clicked ${type} on row ID ${id}`
+    },
+    selectionChanged(params) {
+      console.log(params.selectedRows[0].id)
+      console.log(params.selectedRows[0].name)
+      console.log(params.selectedRows[0].email)
+      console.log(params.selectedRows[0].age)
+      console.log(params.selectedRows[0].createdAt)
+      console.log(params.selectedRows[0].score)
+    }
+  }
+});
+</script>
+</html>
