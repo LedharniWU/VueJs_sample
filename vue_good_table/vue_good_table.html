@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="jp">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/vue-good-table@2.16.3/dist/vue-good-table.css" rel='stylesheet'> 
+    <script src="https://cdn.jsdelivr.net/npm/vue-good-table@2.16.3/dist/vue-good-table.js"></script>
+    <script src="https://www.promisejs.org/polyfills/promise-7.0.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.11/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>Learning Vue Good Table</title>
+</head>
+
+<body>
+    <!-- User Table -->
+    <h1>User Table</h1>
+    <p>Use Axios Get API View Vue-good-table</p>
+    <div id = "user_table" style="min-height: 500px;">
+        <vue-good-table
+        :columns="columns" 
+        :rows="rows"
+        theme="black-rhino"
+        style-class="vgt-table striped"
+        :fixed-header="true"
+        :search-options="searchOptions"
+        max-height="350px"
+        :pagination-options="{
+            enabled: true,
+            mode: 'records',
+            perPage: 5,
+            position: 'bottom',
+            perPageDropdown: [5, 10, 100],
+            dropdownAllowAll: false,
+            setCurrentPage: 1,
+            nextLabel: '次へ',
+            prevLabel: '前へ',
+            rowsPerPageLabel: '行数',
+            ofLabel: '中',
+            pageLabel: 'ページ',
+            allLabel: 'All'
+        }"
+        ></vue-good-table>
+    </div>
+
+    <!-- User Permission Table -->
+    <h1>User Permission Table</h1>
+    <p>Grouped Table User Permission do Add/Delete</p>
+    <div id = "user_permission_table">
+        <vue-good-table
+        :columns="columns"
+        :rows="rows"
+        theme="black-rhino"
+        style-class="vgt-table striped"
+        :fixed-header="true"
+        max-height="500px"
+        :search-options="searchOptions"
+        :pagination-options="{
+            enabled: true,
+            mode: 'records',
+            perPage: 10,
+            position: 'bottom',
+            perPageDropdown: [10, 50, 100],
+            dropdownAllowAll: false,
+            setCurrentPage: 1,
+            nextLabel: '次へ',
+            prevLabel: '前へ',
+            rowsPerPageLabel: '行数',
+            ofLabel: '中',
+            pageLabel: 'ページ', // for 'pages' mode
+            allLabel: 'All',
+        }"
+        :group-options="{
+            enabled: true
+        }"
+        >
+            <template slot="table-row" slot-scope="props">
+                <span v-if="props.column.field == 'before'">
+                    <button v-if="props.row.flog == 'true'" @click="deleteRow(props.row.id)">DELETE</button>
+                    <button v-if="props.row.flog == 'false'" @click="addRow(props.row.id)">ADD</button>
+                </span>
+            </template>
+        </vue-good-table>
+    </div>
+</body>
+
+<script>
+    // input Vue_good_table
+    Vue.use(window.vueGoodTable.default);
+
+    // User Table 
+    new Vue({
+        el: '#user_table',
+        data: {
+            columns:[
+                {
+                    label: 'ID',
+                    field: 'id',
+                    type: "number",
+                },
+                {
+                    label: 'Name',
+                    field: 'name',
+                },
+                {
+                    label: 'Username',
+                    field: 'username',
+                },
+                {
+                    label: 'Email',
+                    field: 'email',
+                },
+                {
+                    label: 'Phone',
+                    field: 'phone',
+                },
+                {
+                    label: 'Website',
+                    field: 'website',
+                },
+                {
+                    label: 'Address',
+                    field: 'address.street',
+                },
+                {
+                    label: 'Company',
+                    field: 'company.name',
+                },
+            ],
+            rows:[],
+            searchOptions: {
+                enabled: true,
+                placeholder: 'テーブルを検索します',
+            },
+        },
+        mounted : function(){
+            axios.get('https://jsonplaceholder.typicode.com/users')
+                 .then(response => this.rows = response.data)
+                 .catch(error => console.log(error))
+        },
+        methods: {}
+    })
+
+    // User Permission Table
+    new Vue({
+        el: "#user_permission_table",
+        data: {
+            columns:[
+                {
+                    label: 'ID',
+                    field: 'id',
+                    width: '50px',
+                    type: "number",
+                    sortable: true,
+                },
+                {
+                    label: 'Permission_Name',
+                    field: 'permission_Name',
+                    sortable: true,
+                    type: "string",
+                },
+                {
+                    label: 'Action',
+                    field: 'before',
+                    sortable: false,
+                },
+            ],
+            rows:[
+                {
+                    mode: 'span',
+                    label: 'Permissions',
+                    children: [
+                        { id:1, permission_Name:"Create User Account", flog: 'true'},
+                        { id:4, permission_Name:"Add User Permission", flog: 'true'},
+                        { id:5, permission_Name:"Delect User Permission", flog: 'true'},
+                    ]
+                },
+                {
+                    mode: 'span',
+                    label: 'Prohibition',
+                    children: [
+                        { id:2, permission_Name:"Delect User Account", flog: 'false'},
+                        { id:3, permission_Name:"Edit User info", flog: 'false'},
+                    ]
+                } 
+            ],
+            searchOptions: {
+                enabled: true,
+                placeholder: 'テーブルを検索します',
+            },
+        },
+        methods: {
+            deleteRow(id) {
+                const delete_rows_data = []
+                const add_rows_data = []
+                this.rows[0].children.forEach(function(element){
+                    if (!(element.id == id)) {
+                        delete_rows_data.push(element)
+                    } else {
+                        element.flog = 'false'
+                        add_rows_data.push(element)
+                    }
+                });
+                this.rows[0].children = delete_rows_data
+                this.rows[1].children.push(add_rows_data[0])
+            },
+            addRow(id) {
+                const delete_rows_data = []
+                const add_rows_data = []
+                this.rows[1].children.forEach(function(element){
+                    if(!(element.id == id)) {
+                        add_rows_data.push(element)
+                    }else{
+                        element.flog = 'true'
+                        delete_rows_data.push(element)
+                    }
+                });
+                this.rows[1].children = add_rows_data
+                this.rows[0].children.push(delete_rows_data[0])
+            },
+        }
+    })
+</script>
+</html>
